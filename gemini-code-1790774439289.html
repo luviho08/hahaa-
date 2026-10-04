@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khám Phá Lịch Sử TP.HCM Thế Kỉ X - XVI</title>
+  <style>
+    :root {
+      --primary: #d97706;
+      --primary-dark: #b45309;
+      --bg: #fffbeb;
+      --card-bg: #ffffff;
+      --text: #1f2937;
+      --accent: #10b981;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 28px;
+      border: 3px solid #fde68a;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #fef3c7;
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: #78350f;
+      line-height: 1.3;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fefce8;
+      padding: 12px 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      border: 1px solid #fef08a;
+    }
+
+    .timer {
+      color: #dc2626;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-box {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      line-height: 1.45;
+      color: #111827;
+      min-height: 60px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .btn-opt {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #374151;
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-opt:hover:not(:disabled) {
+      background: #fef3c7;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-opt.correct {
+      background: #d1fae5 !important;
+      border-color: #059669 !important;
+      color: #065f46 !important;
+    }
+
+    .btn-opt.wrong {
+      background: #fee2e2 !important;
+      border-color: #dc2626 !important;
+      color: #991b1b !important;
+    }
+
+    .btn-opt:disabled {
+      cursor: default;
+    }
+
+    .explanation-box {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-next {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+      transition: background 0.2s;
+    }
+
+    .btn-next:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Màn hình kết thúc */
+    .result-screen {
+      text-align: center;
+      display: none;
+      padding: 20px 0;
+    }
+
+    .result-score {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 16px 0;
+    }
+
+    .result-msg {
+      font-size: 1.2rem;
+      margin-bottom: 24px;
+      color: #4b5563;
+    }
+
+    .btn-restart {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Màn hình Trò chơi -->
+  <div id="quiz-screen">
+    <header>
+      <span class="badge">GDĐP LỚP 7 • TP. HỒ CHÍ MINH</span>
+      <h1>LỊCH SỬ TP.HCM THẾ KỈ X - XVI</h1>
+    </header>
+
+    <div class="status-bar">
+      <span>Câu hỏi: <b id="current-q">1</b>/7</span>
+      <span class="timer">⏳ <span id="time-left">20</span>s</span>
+      <span>Điểm: <b id="score-display">0</b></span>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="question-box" id="question-text">Đang tải câu hỏi...</div>
+
+    <div class="options-grid" id="options-grid"></div>
+
+    <div class="explanation-box" id="explanation-box"></div>
+
+    <div class="controls">
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Câu Tiếp Theo ➔</button>
+    </div>
+  </div>
+
+  <!-- Màn hình Tổng kết -->
+  <div class="result-screen" id="result-screen">
+    <div style="font-size: 4rem;">🏆</div>
+    <h2>HOÀN THÀNH BÀI LUYỆN TẬP!</h2>
+    <div class="result-score" id="final-score">0 / 7</div>
+    <p class="result-msg" id="final-message">Thầy Cô và Học sinh đã hoàn thành xuất sắc thử thách!</p>
+    <button class="btn-restart" onclick="restartQuiz()">Chơi Lại Từ Đầu ↺</button>
+  </div>
+</div>
+
+<script>
+  // Dữ liệu câu hỏi chuẩn theo bài học GDĐP TP.HCM Lớp 7
+  const quizData = [
+    {
+      q: "Vào những thế kỉ đầu Công nguyên, vùng đất TP. Hồ Chí Minh ngày nay thuộc về vương quốc nào?",
+      options: ["Chân Lạp", "Phù Nam", "Champa", "Đại Việt"],
+      answer: 1,
+      exp: "Vào những thế kỉ đầu Công nguyên, vùng đất thuộc Nam Bộ ngày nay (trong đó có TP.HCM) về danh nghĩa từng thuộc không gian vương quốc cổ Phù Nam."
+    },
+    {
+      q: "Đến khoảng thế kỉ XIII - XV, đặc điểm tự nhiên nổi bật của vùng đất TP. Hồ Chí Minh là gì?",
+      options: [
+        "Đã có nhiều phố xá đông đúc, trù phú",
+        "Nơi đô thị cảng thị giao thương sầm uất",
+        "Hoang vu, rừng rậm sình lầy, chưa được khai phá nhiều",
+        "Trung tâm chính trị đầu não của chính quyền Chân Lạp"
+      ],
+      answer: 2,
+      exp: "Thời kì này, chính quyền Chân Lạp bỏ ngỏ không quản lí thực tế. Địa bàn TP.HCM bấy giờ phần lớn vẫn là rừng rậm nhiệt đới hoang vu và đầm lầy ngập mặn."
+    },
+    {
+      q: "Cư dân cổ ở vùng đồi núi thấp thường sử dụng phương thức truyền thống nào để trồng lúa nương?",
+      options: [
+        "Cày bừa kết hợp sức kéo trâu bò quy mô lớn",
+        "Phát – đốt – chọc – trỉa",
+        "Sử dụng công cụ cơ giới thô sơ",
+        "Xây dựng hệ thống đê điều kênh mương thủy lợi"
+      ],
+      answer: 1,
+      exp: "Ở vùng gò đồi, phương thức canh tác truyền thống của cư dân bản địa (Chơ Ro, Mạ...) là lối làm rẫy 'phát, đốt, chọc, trỉa' phụ thuộc hoàn toàn vào mưa tự nhiên."
+    },
+    {
+      q: "Nghề thủ công nghiệp nào sau đây KHÔNG xuất hiện ở cộng đồng cư dân TP. Hồ Chí Minh thời kì X – XVI?",
+      options: ["Dệt thổ cẩm", "Đan lát tre mây", "Làm đồ trang sức đá, cườm", "In ấn sách mộc bản"],
+      answer: 3,
+      exp: "Nghề in ấn sách mộc bản chưa xuất hiện ở cộng đồng cư dân bản địa thời kì này. Các nghề phổ biến là dệt thổ cẩm, đan lát gùi/nơm, rèn công cụ và chế tác trang sức."
+    },
+    {
+      q: "Hình thức trao đổi sản phẩm chủ yếu của cư dân vùng đất TP. Hồ Chí Minh thời kì này là gì?",
+      options: [
+        "Sử dụng tiền kim loại của các triều đại",
+        "Trao đổi bằng giấy bạc",
+        "Phương thức 'Vật đổi vật' (hàng đổi hàng)",
+        "Giao thương qua hối phiếu ngân hàng quốc tế"
+      ],
+      answer: 2,
+      exp: "Cư dân chủ yếu dùng lâm sản, mật ong, sáp rừng để 'vật đổi vật' lấy muối biển, vải vóc, gốm sứ và trang sức kim hoàn từ các vùng lân cận."
+    },
+    {
+      q: "Tín ngưỡng bản địa đặc trưng nhất của cộng đồng cư dân TP. Hồ Chí Minh từ thế kỉ X – XVI là gì?",
+      options: [
+        "Phật giáo Đại thừa",
+        "Thờ thần (Yang) như thần núi, thần lúa, thần rừng",
+        "Nho giáo của Khổng Tử",
+        "Đạo Lão và tín ngưỡng thờ mẫu phụ hệ"
+      ],
+      answer: 1,
+      exp: "Họ theo tín ngưỡng vạn vật hữu linh, tin vào sự hiện diện tối thượng của các thần linh (Yang) bảo hộ mùa màng và đời sống buôn làng."
+    },
+    {
+      q: "Trong quan hệ gia đình và tổ chức xã hội thời kì này, chế độ nào vẫn đóng vai trò chủ đạo?",
+      options: [
+        "Gia đình phụ hệ phụ quyền hoàn chỉnh",
+        "Gia đình mẫu hệ (con theo họ mẹ, tôn vinh vai trò người phụ nữ)",
+        "Gia đình hạt nhân độc lập theo kiểu phương Tây",
+        "Cơ cấu quan liêu quý tộc"
+      ],
+      answer: 1,
+      exp: "Chế độ mẫu hệ vẫn giữ vai trò chi phối: con gái được quyền thừa kế tài sản, con theo họ mẹ, dù thời gian sau đã bắt đầu manh nha những biến chuyển mới."
+    }
+  ];
+
+  let currentIdx = 0;
+  let score = 0;
+  let timer = null;
+  let timeLeft = 20;
+
+  // Trình phát âm thanh Web Audio API (Synthesizer không phụ thuộc mạng internet)
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function playSound(freq, duration, type = 'sine') {
+    try {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+      osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+  }
+
+  function renderQuestion() {
+    clearInterval(timer);
+    timeLeft = 20;
+    document.getElementById("time-left").innerText = timeLeft;
+    document.getElementById("btn-next").style.display = "none";
+    document.getElementById("explanation-box").style.display = "none";
+
+    const qData = quizData[currentIdx];
+    document.getElementById("current-q").innerText = currentIdx + 1;
+    document.getElementById("question-text").innerText = `Câu ${currentIdx + 1}: ${qData.q}`;
+    
+    // Cập nhật thanh tiến trình
+    const progress = ((currentIdx) / quizData.length) * 100;
+    document.getElementById("progress-bar").style.width = progress + "%";
+
+    const grid = document.getElementById("options-grid");
+    grid.innerHTML = "";
+
+    const labels = ["A", "B", "C", "D"];
+    qData.options.forEach((opt, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "btn-opt";
+      btn.innerHTML = `<strong>${labels[idx]}.</strong>&nbsp;${opt}`;
+      btn.onclick = () => selectAnswer(idx);
+      grid.appendChild(btn);
+    });
+
+    // Bắt đầu đếm ngược thời gian suy nghĩ
+    timer = setInterval(() => {
+      timeLeft--;
+      document.getElementById("time-left").innerText = timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        timeOut();
+      }
+    }, 1000);
+  }
+
+  function selectAnswer(chosenIdx) {
+    clearInterval(timer);
+    const qData = quizData[currentIdx];
+    const buttons = document.querySelectorAll(".btn-opt");
+    
+    buttons.forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === qData.answer) {
+        btn.classList.add("correct");
+      }
+      if (idx === chosenIdx && chosenIdx !== qData.answer) {
+        btn.classList.add("wrong");
+      }
+    });
+
+    if (chosenIdx === qData.answer) {
+      score++;
+      document.getElementById("score-display").innerText = score;
+      playSound(600, 0.2, 'triangle');
+      setTimeout(() => playSound(800, 0.3, 'triangle'), 100);
+    } else {
+      playSound(200, 0.4, 'sawtooth');
+    }
+
+    showExplanation();
+  }
+
+  function timeOut() {
+    const qData = quizData[currentIdx];
+    const buttons = document.querySelectorAll(".btn-opt");
+    buttons.forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === qData.answer) {
+        btn.classList.add("correct");
+      }
+    });
+    playSound(180, 0.5, 'square');
+    showExplanation();
+  }
+
+  function showExplanation() {
+    const expBox = document.getElementById("explanation-box");
+    expBox.innerHTML = `💡 <b>Kiến thức ghi nhớ:</b> ${quizData[currentIdx].exp}`;
+    expBox.style.display = "block";
+    document.getElementById("btn-next").style.display = "inline-block";
+  }
+
+  function nextQuestion() {
+    currentIdx++;
+    if (currentIdx < quizData.length) {
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    document.getElementById("quiz-screen").style.display = "none";
+    document.getElementById("result-screen").style.display = "block";
+    document.getElementById("final-score").innerText = `${score} / ${quizData.length}`;
+
+    let msg = "";
+    if (score === 7) {
+      msg = "Xuất sắc! Học sinh đã nắm trọn vẹn lịch sử TP. Hồ Chí Minh thời kì X - XVI!";
+      playSound(523, 0.2); setTimeout(()=>playSound(659, 0.2), 150); setTimeout(()=>playSound(784, 0.4), 300);
+    } else if (score >= 5) {
+      msg = "Kết quả rất tốt! Các em chỉ cần ôn thêm một vài chi tiết nhỏ về kinh tế và xã hội.";
+    } else {
+      msg = "Các em hãy đọc lại tài liệu GDĐP mục I & II để củng cố vững chắc bài học nhé!";
+    }
+    document.getElementById("final-message").innerText = msg;
+  }
+
+  function restartQuiz() {
+    currentIdx = 0;
+    score = 0;
+    document.getElementById("score-display").innerText = score;
+    document.getElementById("result-screen").style.display = "none";
+    document.getElementById("quiz-screen").style.display = "block";
+    renderQuestion();
+  }
+
+  // Khởi động lượt chơi
+  renderQuestion();
+</script>
+</body>
+</html>
